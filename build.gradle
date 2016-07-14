@@ -38,3 +38,37 @@ dependencies {
 }
 
 test.useTestNG()
+
+defaultTasks 'clean', 'build'
+
+// Copies files to build/docker so that 'docker build -t spring-boot-microservice-blueprint build/docker/' can be used to build image
+task docker() {
+    ext {
+        buildDocker = "${buildDir}/docker"
+    }
+
+    doLast {
+        copy {
+            from jar
+            into buildDocker
+            rename {
+                "${project.name}.jar"
+            }
+        }
+	    copy {
+	        from "${projectDir}/src/docker/"
+	        include "*"
+	        into buildDocker
+	    }
+	}
+	
+    doLast {
+       copy {
+           from "${projectDir}/src/main/resources/application.properties"
+           into "${buildDir}/template"
+           rename {
+               "application.properties"
+           }
+       }
+    }
+}
