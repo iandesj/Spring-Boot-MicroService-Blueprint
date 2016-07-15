@@ -1,3 +1,5 @@
+defaultTasks 'clean', 'build'
+
 buildscript {
     repositories {
         mavenCentral()
@@ -34,7 +36,19 @@ dependencies {
 	// compile 'mysql:mysql-connector-java'
     // compile 'org.postgresql:postgresql'
 
-    testCompile 'org.testng:testng:6.9.11'
+    testCompile 'org.testng:testng:6.9.9'
+    testCompile ("org.springframework.boot:spring-boot-starter-test") {
+        exclude group: 'junit'
+    }
+    testCompile "org.mockito:mockito-all:1.9.5"
+    testCompile "com.jayway.jsonpath:json-path:2.0.0"
+	testRuntime 'com.h2database:h2'
 }
 
-test.useTestNG()
+test {
+    useTestNG()
+    testLogging {
+        events 'passed', 'skipped', 'failed'
+        showStandardStreams false
+    }
+}

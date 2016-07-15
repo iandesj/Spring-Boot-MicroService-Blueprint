@@ -1,13 +1,12 @@
 package com.example.blueprint.service;
 
-import com.example.blueprint.User;
-import com.example.blueprint.repository.UsersRepository;
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import com.example.blueprint.User;
+import com.example.blueprint.repository.UsersRepository;
 
 @Service
 public class UsersService {
@@ -16,34 +15,29 @@ public class UsersService {
     private UsersRepository repo;
 
     public List<User> getAllUsers() {
-        return (List<User>)repo.findAll();
+        return (List<User>) repo.findAll();
     }
 
-    public ResponseEntity<?> findUserById(long userId) {
-        final User user = repo.findOne(userId);
-        return (user == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok(user);
+    public User findUserById(long userId) {
+        return repo.findOne(userId);
     }
 
     public User createUser(User user) {
         return repo.save(user);
     }
 
-    public ResponseEntity<?> updateUser(long userId, User updatedUser) {
+    public User updateUser(long userId, User updatedUser) {
         if(repo.exists(userId)) {
             updatedUser.setUserId(userId);
-            return ResponseEntity.ok(repo.save(updatedUser));
-        } else {
-            return ResponseEntity.notFound().build();
+            return updatedUser;
+        }
+        else {
+            return null;
         }
     }
 
-    public ResponseEntity<?> deleteUser(long userId) {
-        if(repo.exists(userId)) {
-            repo.delete(userId);
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public void deleteUser(long userId) {
+        repo.delete(userId);
     }
 
 }
