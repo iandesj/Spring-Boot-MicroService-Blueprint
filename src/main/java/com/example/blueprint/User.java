@@ -11,7 +11,7 @@ import javax.persistence.Table;
 public class User {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long userId;
     private String firstName;
     private String lastName;
@@ -19,9 +19,9 @@ public class User {
 
     public User() {}
 
-	public User(long userId) {
-		this.userId = userId;
-	}
+    public User(long userId) {
+        this.userId = userId;
+    }
 
     public User(String firstName, String lastName, String email) {
         this.firstName = firstName;
@@ -31,7 +31,7 @@ public class User {
 
     /* Getters and Setters */
 
-    public long getUserId() {
+    public Long getUserId() {
         return this.userId;
     }
 

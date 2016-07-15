@@ -1,9 +1,5 @@
 package com.example.blueprint.rest;
 
-import com.example.blueprint.User;
-import com.example.blueprint.service.UsersService;
-
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +9,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.blueprint.User;
+import com.example.blueprint.service.UsersService;
 
 @RequestMapping(value = "/api/v1/users")
 @RestController
@@ -32,7 +30,8 @@ public class UsersController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{userId}")
     public @ResponseBody ResponseEntity<?> findUserById(@PathVariable long userId) {
-        return service.findUserById(userId);
+        final User user = service.findUserById(userId);
+        return (user == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok(user);
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -43,12 +42,14 @@ public class UsersController {
 
     @RequestMapping(method = RequestMethod.PUT, value = "/{userId}")
     public @ResponseBody ResponseEntity<?> updateUser(@PathVariable long userId, @RequestBody User user) {
-        return service.updateUser(userId, user);
+        final User updatedUser = service.updateUser(userId,user);
+        return (updatedUser == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok(updatedUser);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{userId}")
-    public @ResponseBody ResponseEntity<?> deleteUser(@PathVariable long userId) {
-        return service.deleteUser(userId);
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public @ResponseBody void deleteUser(@PathVariable long userId) {
+        service.deleteUser(userId);
     }
 
 }

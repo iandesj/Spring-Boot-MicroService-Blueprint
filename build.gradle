@@ -1,3 +1,5 @@
+defaultTasks 'clean', 'build'
+
 buildscript {
     repositories {
         mavenCentral()
@@ -34,12 +36,14 @@ dependencies {
 	// compile 'mysql:mysql-connector-java'
     // compile 'org.postgresql:postgresql'
 
-    testCompile 'org.testng:testng:6.9.11'
+    testCompile 'org.testng:testng:6.9.9'
+    testCompile ("org.springframework.boot:spring-boot-starter-test") {
+        exclude group: 'junit'
+    }
+    testCompile "org.mockito:mockito-all:1.9.5"
+    testCompile "com.jayway.jsonpath:json-path:2.0.0"
+	testRuntime 'com.h2database:h2'
 }
-
-test.useTestNG()
-
-defaultTasks 'clean', 'build'
 
 // Copies files to build/docker so that 'docker build -t spring-boot-microservice-blueprint build/docker/' can be used to build image
 task docker() {
@@ -70,5 +74,13 @@ task docker() {
                "application.properties"
            }
        }
+    }
+}
+
+test {
+    useTestNG()
+    testLogging {
+        events 'passed', 'skipped', 'failed'
+        showStandardStreams false
     }
 }
