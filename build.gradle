@@ -1,4 +1,4 @@
-defaultTasks 'clean', 'build'
+defaultTasks 'clean', 'test', 'build'
 
 buildscript {
     repositories {
