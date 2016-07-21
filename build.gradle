@@ -32,8 +32,8 @@ dependencies {
 	compile 'org.springframework.boot:spring-boot-starter-data-jpa'
 
     /* Database Drivers -- h2 used by default. See README for MySql/Postgres usage */
-	compile 'com.h2database:h2'
-	// compile 'mysql:mysql-connector-java'
+	// compile 'com.h2database:h2'
+	compile 'mysql:mysql-connector-java'
     // compile 'org.postgresql:postgresql'
 
     testCompile 'org.testng:testng:6.9.9'

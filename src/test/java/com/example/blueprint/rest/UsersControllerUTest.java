@@ -39,7 +39,8 @@ public class UsersControllerUTest {
     @Test
     public void testGetAllUsers() throws Exception {
         when(service.getAllUsers()).thenReturn(Arrays.asList(new User(1),new User(2)));
-        restMvc.perform(get("/api/v1/users")).andExpect(status().isOk()).andExpect(jsonPath("$").isArray());
+        restMvc.perform(get("/api/v1/users").header("X-TenantID","1")).andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray());
         verify(service,times(1)).getAllUsers();
     }
 
@@ -50,15 +51,15 @@ public class UsersControllerUTest {
         user.setFirstName("foo");
         user.setLastName("bar");
         when(service.findUserById(anyLong())).thenReturn(user);
-        restMvc.perform(get("/api/v1/users/1")).andExpect(status().isOk()).andExpect(jsonPath("$.userId").value(1))
-                .andExpect(jsonPath("$.email").value("baz")).andExpect(jsonPath("$.firstName").value("foo"))
-                .andExpect(jsonPath("$.lastName").value("bar"));
+        restMvc.perform(get("/api/v1/users/1").header("X-TenantID","1")).andExpect(status().isOk())
+                .andExpect(jsonPath("$.userId").value(1)).andExpect(jsonPath("$.email").value("baz"))
+                .andExpect(jsonPath("$.firstName").value("foo")).andExpect(jsonPath("$.lastName").value("bar"));
         verify(service,times(1)).findUserById(eq(1L));
     }
 
     @Test
     public void testFindUserByIdNotFound() throws Exception {
-        restMvc.perform(get("/api/v1/users/999")).andExpect(status().isNotFound());
+        restMvc.perform(get("/api/v1/users/999").header("X-TenantID","1")).andExpect(status().isNotFound());
         verify(service,times(1)).findUserById(eq(999L));
     }
 
@@ -72,8 +73,9 @@ public class UsersControllerUTest {
         when(service.createUser(any(User.class))).thenReturn(user);
 
         final String userBody = "{\"email\":\"foo@bar.com\",\"firstName\":\"foo\",\"lastName\":\"bar\"}";
-        restMvc.perform(post("/api/v1/users").content(userBody).accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
+        restMvc.perform(post("/api/v1/users").header("X-TenantID","1").content(userBody)
+                .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
         verify(service,times(1)).createUser(any(User.class));
     }
 
@@ -87,8 +89,8 @@ public class UsersControllerUTest {
         when(service.updateUser(anyLong(),any(User.class))).thenReturn(user);
 
         final String userBody = "{\"email\":\"foo@bar.com\",\"firstName\":\"foo\",\"lastName\":\"baz\"}";
-        restMvc.perform(put("/api/v1/users/1").content(userBody).accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+        restMvc.perform(put("/api/v1/users/1").header("X-TenantID","1").content(userBody)
+                .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName").value("foo")).andExpect(jsonPath("$.lastName").value("baz"))
                 .andExpect(jsonPath("$.email").value("foo@bar.com"));
         verify(service,times(1)).updateUser(anyLong(),any(User.class));
@@ -97,14 +99,15 @@ public class UsersControllerUTest {
     @Test
     public void testUpdateUserNotFound() throws Exception {
         final String userBody = "{\"email\":\"foo@bar.com\",\"firstName\":\"foo\",\"lastName\":\"baz\"}";
-        restMvc.perform(put("/api/v1/users/999").content(userBody).accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
+        restMvc.perform(put("/api/v1/users/999").header("X-TenantID","1").content(userBody)
+                .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
         verify(service,times(1)).updateUser(eq(999L),any(User.class));
     }
 
     @Test
     public void testDeleteUser() throws Exception {
-        restMvc.perform(delete("/api/v1/users/1").contentType(MediaType.APPLICATION_JSON))
+        restMvc.perform(delete("/api/v1/users/1").header("X-TenantID","1").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
         verify(service,times(1)).deleteUser(eq(1L));
     }
