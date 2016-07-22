@@ -1,0 +1,112 @@
+# this is an example of the Uber API
+# as a demonstration of an API spec in YAML
+swagger: '2.0'
+info:
+  title: Blueprint Users API
+  description: Start development with a blueprint service like this one.
+  version: "1.0.0"
+# the domain of the service
+host: localhost
+# array of all schemes that your API supports
+schemes:
+  - https
+# will be prefixed to all paths
+basePath: /api/v1
+produces:
+  - application/json
+paths:
+  /users:
+    get:
+      summary:  Get Users
+      description: |
+        The Get Users endpoint returns a list of all the users in the system.
+        This identifies them with their first name, last name, and email address
+      tags:
+        - Users
+      responses:
+        200:
+          description: An array of Users
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      summary: Create Single User
+      description: | 
+        The Create Single User endpoint allows the creation of a single user.
+        The request object must contain all the fields, otherwise they get nulled.
+      parameters:
+        - name: user
+          in: body
+          description: The user object to create
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      tags:
+        - Users
+      responses:
+        201:
+          description: Successfully created
+        400:
+          description: Bad Request error
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /users/{id}:
+    get:
+      summary: Get Single User
+      description: |
+        The Get Single User endpoint allows the requester to retrieve a single User by that user's id.
+      parameters:
+        - name: id
+          in: path
+          description: The id of the user to retrieve.
+          required: true
+          type: number
+          format: int64
+      tags:
+        - Users
+      responses:
+        200:
+          description: The user based on an id.
+          schema:
+            $ref: '#/definitions/User'
+        404:
+          description: Not Found error
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema: 
+            $ref: '#/definitions/Error'
+definitions:
+  User:
+    type: object
+    properties:
+      firstName:
+        type: string
+        description: First name of the user.
+      lastName:
+        type: string
+        description: Last name of the user.
+      email:
+        type: string
+        description: Email address of the user
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      fields:
+        type: string
+
