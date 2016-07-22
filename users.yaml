@@ -90,6 +90,9 @@ definitions:
   User:
     type: object
     properties:
+      userId:
+        type: integer
+        description: The id of the user record.
       firstName:
         type: string
         description: First name of the user.
