@@ -23,7 +23,17 @@ To use a different flavor of database as the data store other than H2, there are
 2. Change the properties in `application.properties` to match your database connection and credentials that you will be using.
 3. In the `build.gradle` file, comment out (or remove for that matter) the dependency for h2 and other database driver dependencies that will not be used, leaving your chosen database driver dependency to be used.
 4. Optionally change your hibernate properties, and whether you want to log every sql query or not.
-	* The`spring.jpa.hibernate.ddl-auto` property will affect the action performed on the database schema with each startup. Visit http://stackoverflow.com/a/1689769 for a clear explanation of these options. This property will likely not be used in production.
+	* The`spring.jpa.hibernate.ddl-auto` property will affect the action performed on the database schema with each startup. Visit http://stackoverflow.com/a/1689769 for a clear explanation of these options. This property will likely not be used in production. [Hibernate will only generate ddl for the default database, in a multi-tenant environment, each schema must already be created.]
+
+### Dockerization
+To take advantage of running this service in a Docker container, we must first build the Docker image accordingly. Follow the steps below:
+
+```bash
+$ gradle # this will run clean, build, test tasks
+$ gradle docker # docker task will move all necessary artifacts to build/docker directory
+$ docker build -t <tag for the image> build/docker # build the docker image and make it available with a tag
+$ docker run -p 8080:8080 <tag for the image> # run said docker image with tag we just created
+```
 
 ### Contributing
 This project could benefit from added example property files for other major database flavors such as SQL Server, Oracle, etc.
