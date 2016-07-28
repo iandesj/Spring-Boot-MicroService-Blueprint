@@ -3,11 +3,18 @@ Spring Boot MicroService Blueprint
 
 This project serves the purpose of providing a baseline, bare bones RESTful microservice written in Java using the Spring Boot web framework with Spring Data JPA and Hibernate. This code base provides example CRUD api endpoints. An example resource is provided (User) with a few attribute to hit the ground running. 
 
+### Blueprint Features
+There are several other branches from the development branch that offer examples or boilerplate for getting started. To use these features, either `checkout` these branches or merge them into development to get started with a service that uses them.
+
+* **feature-jwt-integration**: this branch provides an example of JWT as part of the service
+* **feature-multitenant-schemas**: this branch contains an example of taking advantage of multitenancy, where each tenant owns their own schema or db unit
+
 ### Prerequisites
 * Gradle 2.14 or greater
 * Java 1.8 or greater
 * MySql 5.6 or greater (Optional, only need if you want to connect to locally)
 * Postgres 9.2 or greater (Optional, only need if you want to connect to locally)
+* Docker 1.11.X or greater (Optional, only need if deploying with Docker)
 
 ### Local Setup for Development
 By default, an H2 in-memory database will be used as the data store. This means that every time the application is stopped and then started again, data will be wiped. For persistent data store, see the "*Database Usage*" section below.
@@ -26,6 +33,7 @@ To use a different flavor of database as the data store other than H2, there are
 	* The`spring.jpa.hibernate.ddl-auto` property will affect the action performed on the database schema with each startup. Visit http://stackoverflow.com/a/1689769 for a clear explanation of these options. This property will likely not be used in production. [Hibernate will only generate ddl for the default database, in a multi-tenant environment, each schema must already be created.]
 
 ### Dockerization
+Make sure Docker is installed!
 To take advantage of running this service in a Docker container, we must first build the Docker image accordingly. Follow the steps below:
 
 ```bash
