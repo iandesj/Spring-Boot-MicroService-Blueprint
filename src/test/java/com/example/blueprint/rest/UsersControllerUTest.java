@@ -19,6 +19,7 @@ import org.testng.annotations.Test;
 
 import com.example.blueprint.User;
 import com.example.blueprint.service.UsersService;
+import com.example.blueprint.service.JwtFactory;
 
 public class UsersControllerUTest {
 
@@ -29,6 +30,9 @@ public class UsersControllerUTest {
 
     @Mock
     private UsersService service;
+
+    @Mock
+    private JwtFactory jwt;
 
     @BeforeMethod
     public void setup() {
@@ -50,6 +54,7 @@ public class UsersControllerUTest {
         user.setFirstName("foo");
         user.setLastName("bar");
         when(service.findUserById(anyLong())).thenReturn(user);
+        when(jwt.generateToken(any(User.class))).thenReturn("");
         restMvc.perform(get("/api/v1/users/1")).andExpect(status().isOk()).andExpect(jsonPath("$.userId").value(1))
                 .andExpect(jsonPath("$.email").value("baz")).andExpect(jsonPath("$.firstName").value("foo"))
                 .andExpect(jsonPath("$.lastName").value("bar"));

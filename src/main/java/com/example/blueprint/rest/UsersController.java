@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.blueprint.User;
 import com.example.blueprint.service.UsersService;
+import com.example.blueprint.service.JwtFactory;
 
 @RequestMapping(value = "/api/v1/users")
 @RestController
@@ -23,6 +25,9 @@ public class UsersController {
     @Autowired
     private UsersService service;
 
+    @Autowired
+    private JwtFactory jwtFactory;
+
     @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody List<User> getAllUsers() {
         return service.getAllUsers();
@@ -30,8 +35,12 @@ public class UsersController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{userId}")
     public @ResponseBody ResponseEntity<?> findUserById(@PathVariable long userId) {
+        HttpHeaders headers = new HttpHeaders();
+
         final User user = service.findUserById(userId);
-        return (user == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok(user);
+        if (user != null) headers.set("X-Auth-Token", jwtFactory.generateToken(user));
+
+        return (user == null) ? ResponseEntity.notFound().build() : new ResponseEntity<>(user,headers,HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST)

@@ -1,5 +1,9 @@
 package com.example.blueprint;
 
+import static com.fasterxml.jackson.annotation.JsonProperty.*;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,6 +20,9 @@ public class User {
     private String firstName;
     private String lastName;
     private String email;
+
+    @JsonProperty(access = Access.WRITE_ONLY)
+    private boolean admin = false;
 
     public User() {}
 
@@ -61,6 +68,14 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isAdmin() {
+        return this.admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
     }
 
 }

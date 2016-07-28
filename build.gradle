@@ -30,6 +30,7 @@ dependencies {
     compile 'org.slf4j:slf4j-api:1.7.13'
 	compile 'org.springframework.boot:spring-boot-starter-web'
 	compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile 'io.jsonwebtoken:jjwt:0.6.0'
 
     /* Database Drivers -- h2 used by default. See README for MySql/Postgres usage */
 	compile 'com.h2database:h2'

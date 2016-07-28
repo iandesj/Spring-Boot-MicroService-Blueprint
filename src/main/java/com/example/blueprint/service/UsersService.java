@@ -29,7 +29,7 @@ public class UsersService {
     public User updateUser(long userId, User updatedUser) {
         if(repo.exists(userId)) {
             updatedUser.setUserId(userId);
-            return updatedUser;
+            return repo.save(updatedUser);
         }
         else {
             return null;
